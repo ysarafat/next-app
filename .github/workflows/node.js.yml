@@ -13,37 +13,21 @@ jobs:
         node-version: [22.x]
 
     steps:
-      # Step 1: Clean workspace to prevent permission issues
-      - name: Clean workspace
-        run: |
-          sudo rm -rf /www/wwwroot/next/_work || true
-          mkdir -p /www/wwwroot/next/_work
-          sudo chown -R $USER:$USER /www/wwwroot/next/_work
-        env:
-          USER: ${{ runner.user }}
-
-      # Step 2: Checkout code
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 3: Set up Node.js environment
+      # Step 2: Set up Node.js environment
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      # Step 4: Install dependencies
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # Step 5: Build the application
+      # Step 4: Build the application
       - name: Build the application
         run: npm run build
-
-      # Step 6: Restart the server using PM2
-      - name: Restart the server
-        run: |
-          pm2 reload nextapp || pm2 start npm --name "nextapp" -- run start
-        env:
-          NODE_ENV: production
