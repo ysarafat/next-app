@@ -27,6 +27,7 @@ jobs:
 
       - name: Build the application
         run: npm run build
-      -name: restart the server
+
+      - name: Restart the server
         run: |
           pm2 restart nextapp
